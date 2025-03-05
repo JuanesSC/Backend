@@ -1,0 +1,16 @@
+services:
+  postgresusb: # Creamos el servicios mydb para identificar la imagen
+    image: postgres:17.3
+    container_name: postgresusbcontainer # Poner el nombre del contenedor
+    volumes:
+      - postgresusb:/var/lib/postgresql # Crearemos un volumen para almacenar los datos de la db
+    ports:
+      - "5433:5432" # Habilitamos el puerto 5432 para acceder a la db
+    environment: # Creamos las variables del usuario contraseña y base de datos
+      POSTGRES_USER: postgres #   que se crea cuando inicia docker
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+volumes: # Creamos y asignamos el volumen de docker
+  postgresusb:
+    driver: local
