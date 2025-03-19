@@ -1,121 +1,64 @@
 package co.edu.usbcali.inmobiliaria.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "propiedades")
+
 public class Propiedad {
-    private Integer idPropietario;
-    private Integer idAsesor;
-    private Integer idTipoPropiedad;
-    private Integer idEstadoPropiedad;
-    private String direccion;
-    private String ciudad;
-    private Integer codigoPostal;
-    private Integer metrosCuadrados;
-    private Integer habitaciones;
-    private Integer banos;
-    private Double precio;
-    private String fechaCreacion;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_propiedad")
     private Integer idPropiedad;
 
-    public Integer getIdPropietario() {
-        return idPropietario;
-    }
+    @Column(nullable = false, length = 100)
+    private String direccion;
 
-    public void setIdPropietario(Integer idPropietario) {
-        this.idPropietario = idPropietario;
-    }
+    @Column(nullable = false, length = 50)
+    private String ciudad;
 
-    public Integer getIdAsesor() {
-        return idAsesor;
-    }
+    @Column(name = "codigo_postal", nullable = false, length = 10)
+    private String codigoPostal;
 
-    public void setIdAsesor(Integer idAsesor) {
-        this.idAsesor = idAsesor;
-    }
+    @Column(name = "metros_cuadrados")
+    private Integer metrosCuadrados;
 
-    public Integer getIdTipoPropiedad() {
-        return idTipoPropiedad;
-    }
+    @Column(name = "habitaciones")
+    private Integer habitaciones;
 
-    public void setIdTipoPropiedad(Integer idTipoPropiedad) {
-        this.idTipoPropiedad = idTipoPropiedad;
-    }
+    @Column(name = "banos")
+    private Integer banos;
 
-    public Integer getIdEstadoPropiedad() {
-        return idEstadoPropiedad;
-    }
+    @Column(name = "precio")
+    private Double precio;
 
-    public void setIdEstadoPropiedad(Integer idEstadoPropiedad) {
-        this.idEstadoPropiedad = idEstadoPropiedad;
-    }
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
 
-    public String getDireccion() {
-        return direccion;
-    }
+    //Llaves Foraneas
+    @ManyToOne
+    @JoinColumn(name = "id_propietario", referencedColumnName = "id_persona", nullable = false)
+    private Persona propietario;
 
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_asesor", referencedColumnName = "id_persona", nullable = false)
+    private Persona asesor;
 
-    public String getCiudad() {
-        return ciudad;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_tipo_propiedad", referencedColumnName = "id_tipo_propiedad", nullable = false)
+    private TipoPropiedad tipoPropiedad;
 
-    public void setCiudad(String ciudad) {
-        this.ciudad = ciudad;
-    }
-
-    public Integer getCodigoPostal() {
-        return codigoPostal;
-    }
-
-    public void setCodigoPostal(Integer codigoPostal) {
-        this.codigoPostal = codigoPostal;
-    }
-
-    public Integer getMetrosCuadrados() {
-        return metrosCuadrados;
-    }
-
-    public void setMetrosCuadrados(Integer metrosCuadrados) {
-        this.metrosCuadrados = metrosCuadrados;
-    }
-
-    public Integer getHabitaciones() {
-        return habitaciones;
-    }
-
-    public void setHabitaciones(Integer habitaciones) {
-        this.habitaciones = habitaciones;
-    }
-
-    public Integer getBanos() {
-        return banos;
-    }
-
-    public void setBanos(Integer banos) {
-        this.banos = banos;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public String getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(String fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public Integer getIdPropiedad() {
-        return idPropiedad;
-    }
-
-    public void setIdPropiedad(Integer idPropiedad) {
-        this.idPropiedad = idPropiedad;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_estado_propiedad", referencedColumnName = "id_estado_propiedad", nullable = false)
+    private EstadoPropiedad estadoPropiedad;
 }

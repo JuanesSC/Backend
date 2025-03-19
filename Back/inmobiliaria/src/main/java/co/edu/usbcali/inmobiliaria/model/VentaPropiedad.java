@@ -1,67 +1,44 @@
 package co.edu.usbcali.inmobiliaria.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "ventas_propiedades")
 public class VentaPropiedad {
-    private Integer idPropiedad;
-    private Integer idCliente;
-    private Integer idAsesor;
-    private String fechaVenta;
-    private Double precioVenta;
-    private Double comisionAsesor;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_venta")
     private Integer idVenta;
 
-    public Integer getIdPropiedad() {
-        return idPropiedad;
-    }
+    @Column(name = "fecha_venta")
+    private LocalDate fechaVenta;
 
-    public void setIdPropiedad(Integer idPropiedad) {
-        this.idPropiedad = idPropiedad;
-    }
+    @Column(name = "precio_venta", precision = 12, scale = 2)
+    private BigDecimal precioVenta;
 
-    public Integer getIdCliente() {
-        return idCliente;
-    }
+    @Column(name = "comision_asesor", precision = 10, scale = 2)
+    private BigDecimal comisionAsesor;
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_propiedad", referencedColumnName = "id_propiedad", nullable = false)
+    private Propiedad propiedad;
 
-    public Integer getIdAsesor() {
-        return idAsesor;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_cliente", referencedColumnName = "id_persona", nullable = false)
+    private Persona cliente;
 
-    public void setIdAsesor(Integer idAsesor) {
-        this.idAsesor = idAsesor;
-    }
-
-    public String getFechaVenta() {
-        return fechaVenta;
-    }
-
-    public void setFechaVenta(String fechaVenta) {
-        this.fechaVenta = fechaVenta;
-    }
-
-    public Double getPrecioVenta() {
-        return precioVenta;
-    }
-
-    public void setPrecioVenta(Double precioVenta) {
-        this.precioVenta = precioVenta;
-    }
-
-    public Double getComisionAsesor() {
-        return comisionAsesor;
-    }
-
-    public void setComisionAsesor(Double comisionAsesor) {
-        this.comisionAsesor = comisionAsesor;
-    }
-
-    public Integer getIdVenta() {
-        return idVenta;
-    }
-
-    public void setIdVenta(Integer idVenta) {
-        this.idVenta = idVenta;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_asesor", referencedColumnName = "id_persona", nullable = false)
+    private Persona asesor;
 }

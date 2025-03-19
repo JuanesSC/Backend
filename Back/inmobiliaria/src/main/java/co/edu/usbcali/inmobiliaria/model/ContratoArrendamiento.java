@@ -1,85 +1,50 @@
 package co.edu.usbcali.inmobiliaria.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "contratos_arrendamiento")
 public class ContratoArrendamiento {
-    private Integer idEstadoContrato;
-    private Integer idPropiedad;
-    private Integer idArrendatario;
-    private Integer idAsesor;
-    private String fechaInicio;
-    private String fechaFin;
-    private Double rentaMensual;
-    private Double deposito;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_contrato_arrendamiento")
     private Integer idContratoArrendamiento;
 
-    public Integer getIdEstadoContrato() {
-        return idEstadoContrato;
-    }
+    @Column(name = "fecha_inicio", nullable = false)
+    private LocalDateTime fechaInicio;
 
-    public void setIdEstadoContrato(Integer idEstadoContrato) {
-        this.idEstadoContrato = idEstadoContrato;
-    }
+    @Column(name = "fecha_fin", nullable = false)
+    private LocalDateTime fechaFin;
 
-    public Integer getIdPropiedad() {
-        return idPropiedad;
-    }
+    @Column(name = "renta_mensual", precision = 10, scale = 2, nullable = false)
+    private Double rentaMensual;
 
-    public void setIdPropiedad(Integer idPropiedad) {
-        this.idPropiedad = idPropiedad;
-    }
+    @Column(name = "deposito", precision = 10, scale = 2)
+    private Double deposito;
 
-    public Integer getIdArrendatario() {
-        return idArrendatario;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_estado_contrato", referencedColumnName = "id_estado_contrato", nullable = false)
+    private EstadoContrato estadoContrato;
 
-    public void setIdArrendatario(Integer idArrendatario) {
-        this.idArrendatario = idArrendatario;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_propiedad", referencedColumnName = "id_propiedad", nullable = false)
+    private Propiedad propiedad;
 
-    public Integer getIdAsesor() {
-        return idAsesor;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_arrendatario", referencedColumnName = "id_persona", nullable = false)
+    private Persona arrendatario;
 
-    public void setIdAsesor(Integer idAsesor) {
-        this.idAsesor = idAsesor;
-    }
-
-    public String getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public void setFechaInicio(String fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public String getFechaFin() {
-        return fechaFin;
-    }
-
-    public void setFechaFin(String fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public Double getRentaMensual() {
-        return rentaMensual;
-    }
-
-    public void setRentaMensual(Double rentaMensual) {
-        this.rentaMensual = rentaMensual;
-    }
-
-    public Double getDeposito() {
-        return deposito;
-    }
-
-    public void setDeposito(Double deposito) {
-        this.deposito = deposito;
-    }
-
-    public Integer getIdContratoArrendamiento() {
-        return idContratoArrendamiento;
-    }
-
-    public void setIdContratoArrendamiento(Integer idContratoArrendamiento) {
-        this.idContratoArrendamiento = idContratoArrendamiento;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_asesor", referencedColumnName = "id_persona", nullable = false)
+    private Persona asesor;
 }

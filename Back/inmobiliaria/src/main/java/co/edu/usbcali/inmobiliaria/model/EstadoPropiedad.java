@@ -1,31 +1,27 @@
 package co.edu.usbcali.inmobiliaria.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "estados_propiedad")
+
 public class EstadoPropiedad {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column (name = "nombre", nullable = false, length =30)
     private String nombre;
+
+    @Column (name = "descripcion", length =30)
     private String descripcion;
+
+    @Column (name = "id_estado_propiedad", length =30)
     private Integer idEstadoPropiedad;
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Integer getIdEstadoPropiedad() {
-        return idEstadoPropiedad;
-    }
-
-    public void setIdEstadoPropiedad(Integer idEstadoPropiedad) {
-        this.idEstadoPropiedad = idEstadoPropiedad;
-    }
 }
