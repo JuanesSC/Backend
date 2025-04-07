@@ -1,6 +1,5 @@
 package co.edu.usbcali.inmobiliaria.model;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,20 +13,15 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "estados_contrato")
 
-
 public class EstadoContrato {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nombre", length = 50)
-    private String nombre;
+    @Column (name = "id_estado_contrato", nullable = false, length =30)
+    private Integer idEstadoContrato;
 
-    @Column(name = "descripcion", length = 50)
+    @Column (name = "descripcion")
     private String descripcion;
 
-    @Column(name = "idEstadoContrato", length = 50)
-    private String idEstadoContrato;
-
-
-
+    @Column (name = "id_estado_contrato", nullable = false, length =30)
+    private String nombre;
 }
