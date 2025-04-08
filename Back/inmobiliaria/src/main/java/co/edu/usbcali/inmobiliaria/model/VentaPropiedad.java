@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -24,11 +23,11 @@ public class VentaPropiedad {
     @Column(name = "fecha_venta")
     private LocalDate fechaVenta;
 
-    @Column(name = "precio_venta", precision = 12, scale = 2)
-    private BigDecimal precioVenta;
+    @Column(name = "precio_venta", precision = 12)
+    private Double precioVenta;
 
-    @Column(name = "comision_asesor", precision = 10, scale = 2)
-    private BigDecimal comisionAsesor;
+    @Column(name = "comision_asesor", precision = 10)
+    private Double comisionAsesor;
 
     @ManyToOne
     @JoinColumn(name = "id_propiedad", referencedColumnName = "id_propiedad", nullable = false)

@@ -19,9 +19,10 @@ public class EstadoContrato {
     @Column (name = "id_estado_contrato", nullable = false, length =30)
     private Integer idEstadoContrato;
 
+
     @Column (name = "descripcion")
     private String descripcion;
 
-    @Column (name = "id_estado_contrato", nullable = false, length =30)
+    @Column (name = "nombre", nullable = false, length =30)
     private String nombre;
 }

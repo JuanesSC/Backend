@@ -24,5 +24,4 @@ public class EstadoPropiedad {
 
     @Column (name = "nombre", length =30)
     private String nombre;
-
 }

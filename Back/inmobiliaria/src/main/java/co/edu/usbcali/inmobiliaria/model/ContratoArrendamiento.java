@@ -26,10 +26,10 @@ public class ContratoArrendamiento {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDateTime fechaFin;
 
-    @Column(name = "renta_mensual", precision = 10, scale = 2, nullable = false)
+    @Column(name = "renta_mensual", precision = 10, nullable = false)
     private Double rentaMensual;
 
-    @Column(name = "deposito", precision = 10, scale = 2)
+    @Column(name = "deposito", precision = 10)
     private Double deposito;
 
     @ManyToOne

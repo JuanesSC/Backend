@@ -19,6 +19,9 @@ public class Persona {
     @Column (name = "id_persona", nullable = false, length =30)
     private Integer idPersona;
 
+    @Column (name = "nombre", length =30)
+    private String nombre;
+
     @Column (name = "apellido", nullable = false, length =30)
     private String apellido;
 
@@ -36,7 +39,6 @@ public class Persona {
 
     @Column (name = "codigo_postal", length =30)
     private Integer codigo_postal;
-
-    @Column (name = "id_persona", length =30)
-    private String nombre;
 }
+
+
