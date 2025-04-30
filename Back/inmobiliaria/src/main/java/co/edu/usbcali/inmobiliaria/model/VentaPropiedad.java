@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -21,7 +22,7 @@ public class VentaPropiedad {
     private Integer idVenta;
 
     @Column(name = "fecha_venta")
-    private LocalDate fechaVenta;
+    private LocalDateTime fechaVenta;
 
     @Column(name = "precio_venta", precision = 12)
     private Double precioVenta;
