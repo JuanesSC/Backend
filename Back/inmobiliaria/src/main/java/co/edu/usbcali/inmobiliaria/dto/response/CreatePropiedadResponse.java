@@ -1,27 +1,27 @@
-package co.edu.usbcali.inmobiliaria.dto;
+package co.edu.usbcali.inmobiliaria.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PropiedadDTO {
+public class CreatePropiedadResponse {
+    private Integer idPropiedad;
     private String direccion;
     private String ciudad;
-    private String codigo_postal;
-    private Integer metros_cuadrados;
+    private String codigoPostal;
+    private Integer metrosCuadrados;
     private Integer habitaciones;
     private Integer banos;
     private Double precio;
-    private LocalDateTime fecha_creacion;
+    private LocalDateTime fechaCreacion;
 
-    // IDs de relaciones
+    // Llaves foráneas (solo el ID o puedes extenderlo con info adicional)
     private Integer idPropietario;
     private Integer idAsesor;
     private Integer idTipoPropiedad;

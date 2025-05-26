@@ -1,8 +1,8 @@
 package co.edu.usbcali.inmobiliaria.mapper;
 
-import co.edu.usbcali.inmobiliaria.dto.EstadoPropiedadDTO;
 import co.edu.usbcali.inmobiliaria.dto.PersonaDTO;
-import co.edu.usbcali.inmobiliaria.model.EstadoPropiedad;
+import co.edu.usbcali.inmobiliaria.dto.request.CreatePersonaRequest;
+import co.edu.usbcali.inmobiliaria.dto.response.CreatePersonaResponse;
 import co.edu.usbcali.inmobiliaria.model.Persona;
 
 public class PersonaMapper {
@@ -27,6 +27,28 @@ public class PersonaMapper {
                 .direccion(personaDTO.getDireccion())
                 .ciudad(personaDTO.getCiudad())
                 .codigo_postal(personaDTO.getCodigo_postal())
+                .build();
+    }
+
+    public static Persona createRequestToModel(CreatePersonaRequest createPersonaRequest) {
+        return Persona.builder()
+                .nombre(createPersonaRequest.getNombre())
+                .apellido(createPersonaRequest.getApellido())
+                .telefono(createPersonaRequest.getTelefono())
+                .email(createPersonaRequest.getEmail())
+                .direccion(createPersonaRequest.getDireccion())
+                .ciudad(createPersonaRequest.getCiudad())
+                .build();
+    }
+
+    public static CreatePersonaResponse modelToCreateResponse(Persona persona) {
+        return CreatePersonaResponse.builder()
+                .nombre(persona.getNombre())
+                .apellido(persona.getApellido())
+                .telefono(persona.getTelefono())
+                .email(persona.getEmail())
+                .direccion(persona.getDireccion())
+                .ciudad(persona.getCiudad())
                 .build();
     }
 

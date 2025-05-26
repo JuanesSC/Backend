@@ -1,19 +1,13 @@
 package co.edu.usbcali.inmobiliaria.mapper;
 
 import co.edu.usbcali.inmobiliaria.dto.EstadoPropiedadDTO;
+import co.edu.usbcali.inmobiliaria.dto.request.CreateEstadoPropiedadRequest;
+import co.edu.usbcali.inmobiliaria.dto.response.CreateEstadoPropiedadResponse;
 import co.edu.usbcali.inmobiliaria.model.EstadoPropiedad;
 
 public class EstadoPropiedadMapper {
 
-    public static EstadoPropiedadDTO modelToDTO(EstadoPropiedad estadoPropiedad){
-        // Forma tradicional
-        /*EstadoPropiedadDTO estadoPropiedadDTO = new EstadoPropiedadDTO();
-
-        estadoPropiedadDTO.setNombre(estadoPropiedad.getNombre());
-        estadoPropiedadDTO.setDescripcion(estadoPropiedad.getDescripcion());
-
-        return estadoPropiedadDTO;*/
-
+    public static EstadoPropiedadDTO modelToDTO(EstadoPropiedad estadoPropiedad) {
         return EstadoPropiedadDTO.builder()
                 .nombre(estadoPropiedad.getNombre())
                 .descripcion(estadoPropiedad.getDescripcion())
@@ -27,4 +21,18 @@ public class EstadoPropiedadMapper {
                 .build();
     }
 
+    public static EstadoPropiedad createRequestToModel(CreateEstadoPropiedadRequest request) {
+        return EstadoPropiedad.builder()
+                .nombre(request.getNombre())
+                .descripcion(request.getDescripcion())
+                .build();
+    }
+
+    public static CreateEstadoPropiedadResponse modelToCreateResponse(EstadoPropiedad estadoPropiedad) {
+        return CreateEstadoPropiedadResponse.builder()
+                .id(estadoPropiedad.getIdEstadoPropiedad())
+                .nombre(estadoPropiedad.getNombre())
+                .descripcion(estadoPropiedad.getDescripcion())
+                .build();
+    }
 }
