@@ -21,9 +21,8 @@ public class CreatePropiedadResponse {
     private Double precio;
     private LocalDateTime fechaCreacion;
 
-    // Llaves foráneas (solo el ID o puedes extenderlo con info adicional)
-    private Integer idPropietario;
-    private Integer idAsesor;
-    private Integer idTipoPropiedad;
-    private Integer idEstadoPropiedad;
+    private String nombrePropietario;
+    private String nombreAsesor;
+    private String tipoPropiedad;
+    private String estadoPropiedad;
 }

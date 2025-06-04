@@ -1,12 +1,15 @@
 package co.edu.usbcali.inmobiliaria.service.impl;
 
 import co.edu.usbcali.inmobiliaria.dto.PropiedadDTO;
-import co.edu.usbcali.inmobiliaria.model.Propiedad;
+import co.edu.usbcali.inmobiliaria.dto.request.CreatePropiedadRequest;
+import co.edu.usbcali.inmobiliaria.dto.response.CreatePropiedadResponse;
+import co.edu.usbcali.inmobiliaria.model.*;
 import co.edu.usbcali.inmobiliaria.mapper.PropiedadMapper;
-import co.edu.usbcali.inmobiliaria.repository.PropiedadRepository;
+import co.edu.usbcali.inmobiliaria.repository.*;
 import co.edu.usbcali.inmobiliaria.service.PropiedadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -14,79 +17,198 @@ import java.util.List;
 public class PropiedadServiceImpl implements PropiedadService {
 
     private final PropiedadRepository propiedadRepository;
+    private final PersonaRepository personaRepository;
+    private final TipoPropiedadRepository tipoPropiedadRepository;
+    private final EstadoPropiedadRepository estadoPropiedadRepository;
 
     @Override
     public List<Propiedad> getAllPropiedad() {
-        List<Propiedad> propiedades = propiedadRepository.findAll();
-
-        return propiedades;
+        return propiedadRepository.findAll();
     }
 
     @Override
-    public PropiedadDTO getPropiedadPorId(Integer id){
-        return PropiedadMapper.modelToDto(
-                propiedadRepository.getReferenceById(id)
-        );
+    public PropiedadDTO getPropiedadPorId(Integer id) {
+        Propiedad propiedad = propiedadRepository.getReferenceById(id);
+        return PropiedadMapper.modelToDTO(propiedad);
     }
 
     @Override
-    public PropiedadDTO savePropiedad(PropiedadDTO propiedadDTO) throws Exception {
-
-        // Validar que propiedad no sea nulo
-        if (propiedadDTO == null){
-            throw new Exception("Propiedad no puede ser nulo");
+    public CreatePropiedadResponse createPropiedad(CreatePropiedadRequest request) throws Exception {
+        // Validar request no nulo
+        if (request == null) {
+            throw new Exception("La propiedad no puede ser nula");
         }
 
-        // Validar que direccion no sea nulo
-        if (propiedadDTO.getDireccion() == null){
-            throw new Exception("Direccion no puede ser nulo");
+        // Validar campos básicos
+        if (request.getDireccion() == null || request.getDireccion().isBlank()) {
+            throw new Exception("La dirección no puede ser nula o vacía");
         }
 
-        // Validar que ciudad no sea nulo
-        if (propiedadDTO.getCiudad() == null){
-            throw new Exception("Ciudad no puede ser nulo");
+        if (request.getCiudad() == null || request.getCiudad().isBlank()) {
+            throw new Exception("La ciudad no puede ser nula o vacía");
         }
 
-        // Validar que codigo postal no sea nulo
-        if (propiedadDTO.getCodigo_postal() == null){
-            throw new Exception("Codigo postal no puede ser nulo");
+        if (request.getCodigoPostal() == null || request.getCodigoPostal().isBlank()) {
+            throw new Exception("El código postal no puede ser nulo o vacío");
         }
 
-        // Validar que metros cuadrados no sea nulo
-        if (propiedadDTO.getMetros_cuadrados() == null){
-            throw new Exception("Metros cuadrados no puede ser nulo");
+        if (request.getMetrosCuadrados() == null || request.getMetrosCuadrados() <= 0) {
+            throw new Exception("Los metros cuadrados deben ser mayores a cero");
         }
 
-        // Validar que habitaciones no sea nulo
-        if (propiedadDTO.getHabitaciones() == null){
-            throw new Exception("Habitaciones no puede ser nulo");
+        if (request.getHabitaciones() == null || request.getHabitaciones() < 1) {
+            throw new Exception("El número de habitaciones debe ser al menos 1");
         }
 
-        // Validar que baños no sea nulo
-        if (propiedadDTO.getBanos() == null){
-            throw new Exception("Banos no puede ser nulo");
+        if (request.getBanos() == null || request.getBanos() < 1) {
+            throw new Exception("El número de baños debe ser al menos 1");
         }
 
-        // Validar que precio no sea nulo
-        if (propiedadDTO.getPrecio() == null){
-            throw new Exception("Precio no puede ser nulo");
+        if (request.getPrecio() == null || request.getPrecio() <= 0.0) {
+            throw new Exception("El precio debe ser mayor a cero");
         }
 
-        // Validar que fecha creacion no sea nulo
-        if (propiedadDTO.getFecha_creacion() == null){
-            throw new Exception("Fecha creacion no puede ser nulo");
+        // Validar IDs de entidades relacionadas
+        if (request.getIdPropietario() == null || request.getIdPropietario() <= 0) {
+            throw new Exception("El ID del propietario es inválido");
         }
 
-        // Convertir DTO a Model
-        Propiedad propiedad = PropiedadMapper.dtoToModel(propiedadDTO);
+        if (request.getIdAsesor() == null || request.getIdAsesor() <= 0) {
+            throw new Exception("El ID del asesor es inválido");
+        }
 
-        // Persistir el modelo en db
+        if (request.getIdTipoPropiedad() == null || request.getIdTipoPropiedad() <= 0) {
+            throw new Exception("El ID del tipo de propiedad es inválido");
+        }
+
+        if (request.getIdEstadoPropiedad() == null || request.getIdEstadoPropiedad() <= 0) {
+            throw new Exception("El ID del estado de la propiedad es inválido");
+        }
+
+        // Obtener entidades relacionadas
+        Persona propietario = personaRepository.findById(request.getIdPropietario())
+                .orElseThrow(() -> new Exception("Propietario no encontrado con ID: " + request.getIdPropietario()));
+
+        Persona asesor = personaRepository.findById(request.getIdAsesor())
+                .orElseThrow(() -> new Exception("Asesor no encontrado con ID: " + request.getIdAsesor()));
+
+        TipoPropiedad tipoPropiedad = tipoPropiedadRepository.findById(request.getIdTipoPropiedad())
+                .orElseThrow(() -> new Exception("Tipo de propiedad no encontrado con ID: " + request.getIdTipoPropiedad()));
+
+        EstadoPropiedad estadoPropiedad = estadoPropiedadRepository.findById(request.getIdEstadoPropiedad())
+                .orElseThrow(() -> new Exception("Estado de propiedad no encontrado con ID: " + request.getIdEstadoPropiedad()));
+
+        // Mapear request a modelo y establecer relaciones
+        Propiedad propiedad = PropiedadMapper.createRequestToModel(request);
+        propiedad.setPropietario(propietario);
+        propiedad.setAsesor(asesor);
+        propiedad.setTipoPropiedad(tipoPropiedad);
+        propiedad.setEstadoPropiedad(estadoPropiedad);
+        propiedad.setFechaCreacion(LocalDateTime.now());
+
+        // Guardar en base de datos
         propiedad = propiedadRepository.save(propiedad);
 
-        // Convertir a DTO para retornar
-        PropiedadDTO propiedadDTOPersistido = PropiedadMapper.modelToDto(propiedad);
+        // Convertir a Response y retornar
+        return PropiedadMapper.modelToCreateResponse(propiedad);
+    }
 
-        // Retornar el DTO persistido como lo solicita el metodo
-        return propiedadDTOPersistido;
+    @Override
+    public CreatePropiedadResponse updatePropiedad (Integer id, CreatePropiedadRequest request) throws Exception {
+
+        // Verificamos que exista la propiedad
+        Propiedad propiedad = propiedadRepository.findById(id)
+                .orElseThrow(() -> new Exception("Propiedad no encontrada"));
+
+        // Validaciones basicas (Iguales que en create)
+        if (request == null) {
+            throw new Exception("La propiedad no puede ser nula");
+        }
+
+        if (request.getDireccion() == null || request.getDireccion().isBlank()) {
+            throw new Exception("La dirección no puede ser nula o vacía");
+        }
+
+        if (request.getCiudad() == null || request.getCiudad().isBlank()) {
+            throw new Exception("La ciudad no puede ser nula o vacía");
+        }
+
+        if (request.getCodigoPostal() == null || request.getCodigoPostal().isBlank()) {
+            throw new Exception("El código postal no puede ser nulo o vacío");
+        }
+
+        if (request.getMetrosCuadrados() == null || request.getMetrosCuadrados() <= 0) {
+            throw new Exception("Los metros cuadrados deben ser mayores a cero");
+        }
+
+        if (request.getHabitaciones() == null || request.getHabitaciones() < 1) {
+            throw new Exception("El número de habitaciones debe ser al menos 1");
+        }
+
+        if (request.getBanos() == null || request.getBanos() < 1) {
+            throw new Exception("El número de baños debe ser al menos 1");
+        }
+
+        if (request.getPrecio() == null || request.getPrecio() <= 0.0) {
+            throw new Exception("El precio debe ser mayor a cero");
+        }
+
+        if (request.getIdPropietario() == null || request.getIdPropietario() <= 0) {
+            throw new Exception("El ID del propietario es inválido");
+        }
+
+        if (request.getIdAsesor() == null || request.getIdAsesor() <= 0) {
+            throw new Exception("El ID del asesor es inválido");
+        }
+
+        if (request.getIdTipoPropiedad() == null || request.getIdTipoPropiedad() <= 0) {
+            throw new Exception("El ID del tipo de propiedad es inválido");
+        }
+
+        if (request.getIdEstadoPropiedad() == null || request.getIdEstadoPropiedad() <= 0) {
+            throw new Exception("El ID del estado de la propiedad es inválido");
+        }
+
+        // Obtener entidades relacionadas (Propietario, asesor, tipo y estado)
+        Persona propietario = personaRepository.findById(request.getIdPropietario())
+                .orElseThrow(() -> new Exception("Propietario no encontrado con ID: " + request.getIdPropietario()));
+        Persona asesor = personaRepository.findById(request.getIdAsesor())
+                .orElseThrow(() -> new Exception("Asesor no encontrado con ID: " + request.getIdAsesor()));
+        TipoPropiedad tipoPropiedad = tipoPropiedadRepository.findById(request.getIdTipoPropiedad())
+                .orElseThrow(() -> new Exception("Tipo de propiedad no encontrado con ID: " + request.getIdTipoPropiedad()));
+        EstadoPropiedad estadoPropiedad = estadoPropiedadRepository.findById(request.getIdEstadoPropiedad())
+                .orElseThrow(() -> new Exception("Estado de propiedad no encontrado con ID: " + request.getIdEstadoPropiedad()));
+
+        // Actualizar los campos de la entidad existente
+        propiedad.setDireccion(request.getDireccion());
+        propiedad.setCiudad(request.getCiudad());
+        propiedad.setCodigoPostal(request.getCodigoPostal());
+        propiedad.setMetrosCuadrados(request.getMetrosCuadrados());
+        propiedad.setHabitaciones(request.getHabitaciones());
+        propiedad.setBanos(request.getBanos());
+        propiedad.setPrecio(request.getPrecio());
+
+        propiedad.setPropietario(propietario);
+        propiedad.setAsesor(asesor);
+        propiedad.setTipoPropiedad(tipoPropiedad);
+        propiedad.setEstadoPropiedad(estadoPropiedad);
+
+        // Guardar los cambios en BD
+        Propiedad propiedadUpdated = propiedadRepository.save(propiedad);
+
+        // Mapear a CreatePropiedadResponse
+        return PropiedadMapper.modelToCreateResponse(propiedadUpdated);
+    }
+
+    @Override
+    public void deletePropiedad(Integer id) throws Exception {
+
+        // Verificamos que exista la propiedad
+        if (!propiedadRepository.existsById(id)) {
+            throw new Exception("No existe propiedad con ID: " + id);
+        }
+
+        // Eliminar Propiedad
+        propiedadRepository.deleteById(id);
     }
 }
